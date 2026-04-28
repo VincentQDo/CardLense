@@ -11,5 +11,4 @@
 </svelte:head>
 
 <Navbar></Navbar>
-<div>hello</div>
 {@render children()}
