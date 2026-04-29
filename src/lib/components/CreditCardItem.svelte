@@ -20,7 +20,7 @@
 <div class="flex gap-8 items-center">
   <!-- 3D Card Wrapper -->
   <div class="hover-3d">
-    <figure class="max-w-80 rounded-1xl">
+    <figure class="max-w-80 rounded-2xl">
       <img src={image} alt={name} />
     </figure>
 
