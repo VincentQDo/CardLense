@@ -1,14 +1,14 @@
 <script lang="ts">
-  type Benefit = {
+  interface Benefit {
     label: string;
     value: string;
-  };
+  }
 
-  let {
+  const {
     name,
     image,
     annualFee,
-    benefits = [],
+    benefits = []
   }: {
     name: string;
     image: string;
@@ -44,7 +44,7 @@
     </div>
 
     <div class="flex flex-wrap gap-2 mt-2">
-      {#each benefits as benefit}
+      {#each benefits as benefit (benefit.label)}
         <div class="badge badge-outline p-3">
           {benefit.label}: {benefit.value}
         </div>

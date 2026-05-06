@@ -7,8 +7,8 @@
     annualFee: 95,
     benefits: [
       { label: 'Free Night', value: 'Cat 1-4 yearly' },
-      { label: 'Elite Status', value: 'Discoverist' },
-    ],
+      { label: 'Elite Status', value: 'Discoverist' }
+    ]
   };
 
   const ihg = {
@@ -17,8 +17,8 @@
     annualFee: 99,
     benefits: [
       { label: 'Free Night', value: 'Up to 40k pts' },
-      { label: '4th Night Free', value: 'On award stays' },
-    ],
+      { label: '4th Night Free', value: 'On award stays' }
+    ]
   };
 </script>
 

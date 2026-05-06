@@ -2,8 +2,7 @@
   <div class="hero-content flex-col lg:flex-row gap-12 py-16 px-10">
     <div class="flex flex-col gap-6 max-w-md">
       <div class="flex items-center gap-2">
-        <span
-          class="badge badge-warning badge-sm tracking-widest uppercase text-xs font-semibold"
+        <span class="badge badge-warning badge-sm tracking-widest uppercase text-xs font-semibold"
           >Credit Card Intelligence</span
         >
       </div>
@@ -14,14 +13,14 @@
           <span class="text-primary">use every perk.</span>
         </h1>
         <p class="mt-4 text-base-content/60 text-lg font-light leading-relaxed">
-          CardLense tracks your credit card perks, deadlines, and hidden
-          benefits — so you never leave value on the table again.
+          CardLense tracks your credit card perks, deadlines, and hidden benefits — so you never
+          leave value on the table again.
         </p>
       </div>
 
       <div class="flex flex-wrap gap-3 mt-2">
-        <button class="btn btn-primary btn-md">Get Started Free</button>
-        <button class="btn btn-ghost btn-md">See how it works →</button>
+        <button type="button" class="btn btn-primary btn-md">Get Started Free</button>
+        <button type="button" class="btn btn-ghost btn-md">See how it works →</button>
       </div>
 
       <div class="flex flex-wrap gap-2 mt-2">
@@ -54,9 +53,7 @@
         <div class="card-body p-5 gap-1">
           <div class="w-8 h-5 bg-warning rounded opacity-90"></div>
           <div class="mt-4">
-            <p class="text-[10px] uppercase tracking-widest opacity-60">
-              Platinum Rewards
-            </p>
+            <p class="text-[10px] uppercase tracking-widest opacity-60">Platinum Rewards</p>
             <p class="font-semibold text-sm mt-0.5">Sapphire Reserve</p>
           </div>
         </div>
@@ -68,9 +65,7 @@
         <div class="card-body p-5 gap-1">
           <div class="w-8 h-5 bg-base-100 rounded opacity-70"></div>
           <div class="mt-4">
-            <p class="text-[10px] uppercase tracking-widest opacity-60">
-              Premium Travel
-            </p>
+            <p class="text-[10px] uppercase tracking-widest opacity-60">Premium Travel</p>
             <p class="font-semibold text-sm mt-0.5">Amex Gold</p>
           </div>
         </div>
@@ -82,9 +77,7 @@
         <div class="card-body p-5 gap-1">
           <div class="w-8 h-5 bg-base-100 rounded opacity-70"></div>
           <div class="mt-4">
-            <p class="text-[10px] uppercase tracking-widest opacity-60">
-              No Annual Fee
-            </p>
+            <p class="text-[10px] uppercase tracking-widest opacity-60">No Annual Fee</p>
             <p class="font-semibold text-sm mt-0.5">Freedom Unlimited</p>
           </div>
         </div>
@@ -93,16 +86,14 @@
       <div
         class="badge badge-warning gap-1 shadow-lg absolute -right-4 top-6 z-40 text-xs py-3 px-3"
       >
-        <span class="inline-block w-1.5 h-1.5 rounded-full bg-warning-content"
-        ></span>
+        <span class="inline-block w-1.5 h-1.5 rounded-full bg-warning-content"></span>
         $300 credit unused
       </div>
 
       <div
         class="badge badge-success gap-1 shadow-lg absolute -right-6 top-52 z-40 text-xs py-3 px-3"
       >
-        <span class="inline-block w-1.5 h-1.5 rounded-full bg-success-content"
-        ></span>
+        <span class="inline-block w-1.5 h-1.5 rounded-full bg-success-content"></span>
         12 lounge visits left
       </div>
     </div>
