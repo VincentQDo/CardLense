@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { relative } from 'node:path';
-import { globSync } from 'node';
+import { globSync } from 'node:fs';
 
 const failures = [];
 
