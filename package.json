@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "engines": {
+    "node": ">=24.15.0"
+  },
   "scripts": {
     "dev": "vite dev",
     "host": "vite dev --host 0.0.0.0 --port 3000",
@@ -11,7 +14,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "standards": "node scripts/standards-check.mjs",
-    "validate": "npm run format:check && npm run lint && npm run check && npm run standards",
+    "setup:hooks": "git config core.hooksPath .githooks",
+    "validate": "npm run format:check && npm run lint && npm run check && npm run standards && npm run build",
     "build": "vite build",
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
@@ -26,6 +30,7 @@
     "@sveltejs/adapter-auto": "7.0.1",
     "@sveltejs/kit": "2.57.0",
     "@sveltejs/vite-plugin-svelte": "7.0.0",
+    "@types/node": "25.6.0",
     "eslint": "10.2.1",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-svelte": "3.17.1",

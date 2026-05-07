@@ -2,7 +2,9 @@
 
 ## Required Checks
 
-- Run `npm run validate` before handing work back. Use `npm run lint:fix` and `npm run format` for mechanical fixes.
+- Run `npm run validate` before handing work back. This includes formatting, linting, type checks, project standards, production build, and smoke tests.
+- Run `npm run setup:hooks` once after cloning so local Git hooks run the project gates.
+- Use `npm run lint:fix` and `npm run format` for mechanical fixes.
 - Do not create additional coding-standard scripts. Use `standards-check.mjs` for project-specific style gates.
 - Keep `standards-check.mjs` lightweight and focused on rules not enforced by ESLint or Prettier.
 
@@ -21,7 +23,7 @@
 - Use Tailwind utilities for layout, spacing, responsive behavior, and small visual adjustments.
 - Do not add component `<style>` blocks or inline `style=` attributes.
 - Keep `src/app.css` limited to Tailwind and daisyUI setup unless a project-level styling decision explicitly changes it.
-- Avoid custom CSS when a daisyUI class or Tailwind utility can express the same result.
+- Avoid custom CSS when a daisyUI class or Tailwind utility can express the same result. The current policy is a hard ban unless this standard is changed first.
 
 ## Markup
 
