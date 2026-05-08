@@ -1,19 +1,24 @@
 <script lang="ts">
-  interface Benefit {
-    label: string;
-    value: string;
-  }
+  import { formatDateLabel } from '$lib/utils/card-dates';
+
+  import type { Benefit } from '$lib/types/cards';
 
   const {
     name,
     image,
     annualFee,
-    benefits = []
+    benefits = [],
+    nickname,
+    annualRenewalDate,
+    nextFreeNightDate
   }: {
     name: string;
     image: string;
     annualFee: number;
     benefits: Benefit[];
+    nickname?: string;
+    annualRenewalDate?: string;
+    nextFreeNightDate?: string;
   } = $props();
 </script>
 
@@ -37,11 +42,32 @@
 
   <!-- Right Side: Benefits -->
   <div class="flex flex-col gap-3">
-    <div class="text-xl font-semibold">{name}</div>
+    <div>
+      <div class="text-xl font-semibold">{nickname ?? name}</div>
+      {#if nickname}
+        <div class="text-sm text-base-content/60">{name}</div>
+      {/if}
+    </div>
 
     <div class="text-md">
       Annual Fee: <span class="font-medium">${annualFee}</span>
     </div>
+
+    {#if annualRenewalDate || nextFreeNightDate}
+      <div class="flex flex-wrap gap-2">
+        {#if annualRenewalDate}
+          <div class="badge badge-info badge-outline">
+            Renewal: {formatDateLabel(annualRenewalDate)}
+          </div>
+        {/if}
+
+        {#if nextFreeNightDate}
+          <div class="badge badge-success badge-outline">
+            Next free night: {formatDateLabel(nextFreeNightDate)}
+          </div>
+        {/if}
+      </div>
+    {/if}
 
     <div class="flex flex-wrap gap-2 mt-2">
       {#each benefits as benefit (benefit.label)}

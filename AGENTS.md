@@ -2,7 +2,7 @@
 
 ## Required Checks
 
-- Run `npm run validate` before handing work back. This includes formatting, linting, type checks, project standards, production build, and smoke tests.
+- Run `npm run validate` before handing work back. This includes formatting, linting, type checks, project standards, and production build.
 - Run `npm run setup:hooks` once after cloning so local Git hooks run the project gates.
 - Use `npm run lint:fix` and `npm run format` for mechanical fixes.
 - Do not create additional coding-standard scripts. Use `standards-check.mjs` for project-specific style gates.
