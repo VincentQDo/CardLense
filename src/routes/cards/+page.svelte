@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { cardPresets, findCardPreset, initialTrackedCards } from '$lib/data/card-presets';
   import CreditCardItem from '$lib/components/CreditCardItem.svelte';
-  import { getNextAnnualDate } from '$lib/utils/card-dates';
 
-  import type { AddTrackedCardInput, TrackedCard } from '$lib/types/cards';
+  const cardPresets = [
+    { id: 'hyatt', name: 'World of Hyatt Credit Card' },
+    { id: 'ihg', name: 'IHG Premier Card' }
+  ] as const;
 
   let addCardDialog: HTMLDialogElement;
-  let trackedCards = $state<TrackedCard[]>(initialTrackedCards);
-  let form = $state<AddTrackedCardInput>({
+  let form = $state({
     presetId: cardPresets[0].id,
     nickname: '',
     annualRenewalDate: ''
@@ -21,39 +21,10 @@
     };
   }
 
-  function addTrackedCard(event: SubmitEvent): void {
+  function submitForm(event: SubmitEvent): void {
     event.preventDefault();
-
-    const trimmedNickname = form.nickname.trim();
-
-    if (!trimmedNickname || !form.annualRenewalDate) {
-      return;
-    }
-
-    trackedCards = [
-      ...trackedCards,
-      {
-        id: crypto.randomUUID(),
-        presetId: form.presetId,
-        nickname: trimmedNickname,
-        annualRenewalDate: form.annualRenewalDate,
-        nextFreeNightDate: getNextAnnualDate(form.annualRenewalDate)
-      }
-    ];
-
-    resetForm();
+    console.log('Submitting card form', form);
     addCardDialog.close();
-  }
-
-  function getTrackedCardView(card: TrackedCard) {
-    const preset = findCardPreset(card.presetId);
-
-    return {
-      ...preset,
-      nickname: card.nickname,
-      annualRenewalDate: card.annualRenewalDate,
-      nextFreeNightDate: card.nextFreeNightDate
-    };
   }
 </script>
 
@@ -70,17 +41,15 @@
   </div>
 
   <div class="flex flex-col gap-6">
-    {#each trackedCards as trackedCard (trackedCard.id)}
-      <CreditCardItem {...getTrackedCardView(trackedCard)} />
-    {/each}
+    <CreditCardItem />
   </div>
 </div>
 
-<dialog class="modal" bind:this={addCardDialog}>
+<dialog class="modal" bind:this={addCardDialog} onclose={resetForm}>
   <div class="modal-box">
     <h2 class="text-2xl font-bold">Add credit card</h2>
 
-    <form class="mt-6 flex flex-col gap-4" onsubmit={addTrackedCard}>
+    <form class="mt-6 flex flex-col gap-4" onsubmit={submitForm}>
       <label class="form-control w-full">
         <span class="label">
           <span class="label-text">Card</span>
