@@ -20,6 +20,7 @@ export interface TrackedCard {
   annualRenewalDate: string;
   certificateExpiryDate: string;
   freeNightUsed: boolean;
+  freeNightRedemptionValue: number;
   createdAt: string;
 }
 
@@ -29,4 +30,9 @@ export interface AddTrackedCardInput {
   annualRenewalDate: string;
   certificateExpiryDate: string;
   freeNightUsed: boolean;
+  freeNightRedemptionValue: number;
+}
+
+export interface UpdateTrackedCardInput extends AddTrackedCardInput {
+  id: string;
 }

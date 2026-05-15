@@ -31,6 +31,7 @@ export const initialTrackedCards: TrackedCard[] = cardPresets.map((preset) => ({
   annualRenewalDate: preset.id === 'hyatt' ? '2026-08-15' : '2026-10-01',
   certificateExpiryDate: getNextAnnualDate(preset.id === 'hyatt' ? '2026-08-15' : '2026-10-01'),
   freeNightUsed: false,
+  freeNightRedemptionValue: 0,
   createdAt: '2026-01-01 00:00:00'
 }));
 
