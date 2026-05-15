@@ -29,7 +29,9 @@ export const initialTrackedCards: TrackedCard[] = cardPresets.map((preset) => ({
   presetId: preset.id,
   nickname: preset.id === 'hyatt' ? 'Personal Hyatt' : 'Personal IHG',
   annualRenewalDate: preset.id === 'hyatt' ? '2026-08-15' : '2026-10-01',
-  nextFreeNightDate: getNextAnnualDate(preset.id === 'hyatt' ? '2026-08-15' : '2026-10-01')
+  certificateExpiryDate: getNextAnnualDate(preset.id === 'hyatt' ? '2026-08-15' : '2026-10-01'),
+  freeNightUsed: false,
+  createdAt: '2026-01-01 00:00:00'
 }));
 
 export function findCardPreset(presetId: CardPreset['id']): CardPreset {

@@ -18,11 +18,15 @@ export interface TrackedCard {
   presetId: CardPresetId;
   nickname: string;
   annualRenewalDate: string;
-  nextFreeNightDate: string;
+  certificateExpiryDate: string;
+  freeNightUsed: boolean;
+  createdAt: string;
 }
 
 export interface AddTrackedCardInput {
   presetId: CardPreset['id'];
   nickname: string;
   annualRenewalDate: string;
+  certificateExpiryDate: string;
+  freeNightUsed: boolean;
 }

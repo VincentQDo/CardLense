@@ -34,6 +34,40 @@ export function formatDateLabel(dateInput: string): string {
   }).format(date);
 }
 
+export function getDaysUntilDate(dateInput: string, today = new Date()): number | undefined {
+  const [, year, month, day] = dateInputPattern.exec(dateInput) ?? [];
+
+  if (!year || !month || !day) {
+    return undefined;
+  }
+
+  const date = new Date(Number(year), Number(month) - 1, Number(day));
+  const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const millisecondsPerDay = 24 * 60 * 60 * 1000;
+
+  return Math.ceil((date.getTime() - startOfToday.getTime()) / millisecondsPerDay);
+}
+
+export function formatDaysUntilDate(dateInput: string): string {
+  const daysUntilDate = getDaysUntilDate(dateInput);
+
+  if (daysUntilDate === undefined) {
+    return 'Date unavailable';
+  }
+
+  if (daysUntilDate < 0) {
+    const daysAgo = Math.abs(daysUntilDate);
+
+    return daysAgo === 1 ? 'Expired yesterday' : `Expired ${daysAgo} days ago`;
+  }
+
+  if (daysUntilDate === 0) {
+    return 'Expires today';
+  }
+
+  return daysUntilDate === 1 ? 'Expires tomorrow' : `Expires in ${daysUntilDate} days`;
+}
+
 function toDateInputValue(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
