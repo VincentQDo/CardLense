@@ -1,17 +1,16 @@
 import { randomUUID } from 'node:crypto';
-import { existsSync, mkdirSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { DatabaseSync } from 'node:sqlite';
+import { existsSync } from 'node:fs';
+import Database from 'better-sqlite3';
 
 import { cardPresets } from '$lib/data/card-presets';
+import { databasePath, ensureDatabaseDirectory } from '$lib/server/database';
 import { getDaysUntilDate, getNextAnnualDate } from '$lib/utils/card-dates';
 
 import type { AddTrackedCardInput, TrackedCard, UpdateTrackedCardInput } from '$lib/types/cards';
 
-const databasePath = join(process.cwd(), 'data', 'cardlense.sqlite');
-
 interface TrackedCardRow {
   id: string;
+  user_id: string;
   preset_id: string;
   nickname: string;
   annual_renewal_date: string;
@@ -25,30 +24,32 @@ interface TableColumnRow {
   name: string;
 }
 
-let database: DatabaseSync | undefined;
+let database: Database.Database | undefined;
 
-export function listTrackedCards(): TrackedCard[] {
-  const rows = readTrackedCardRows();
+export function listTrackedCards(userId: string): TrackedCard[] {
+  const rows = readTrackedCardRows(userId);
 
   return rows.map(toTrackedCard);
 }
 
-export function addTrackedCard(input: AddTrackedCardInput): void {
+export function addTrackedCard(userId: string, input: AddTrackedCardInput): void {
   runWrite(() => {
     getDatabase()
       .prepare(
         `INSERT INTO tracked_cards (
           id,
+          user_id,
           preset_id,
           nickname,
           annual_renewal_date,
           certificate_expiry_date,
           free_night_used,
           free_night_redemption_value_cents
-        ) VALUES (?, ?, ?, ?, ?, ?, ?)`
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
       )
       .run(
         randomUUID(),
+        userId,
         input.presetId,
         input.nickname,
         input.annualRenewalDate,
@@ -60,6 +61,7 @@ export function addTrackedCard(input: AddTrackedCardInput): void {
 }
 
 export function updateFreeNightUsed(
+  userId: string,
   cardId: string,
   freeNightUsed: boolean,
   freeNightRedemptionValue: number
@@ -71,18 +73,19 @@ export function updateFreeNightUsed(
         SET free_night_used = ?,
           free_night_redemption_value_cents =
             CASE WHEN ? = 1 THEN ? ELSE 0 END
-        WHERE id = ?`
+        WHERE id = ? AND user_id = ?`
       )
       .run(
         freeNightUsed ? 1 : 0,
         freeNightUsed ? 1 : 0,
         toCents(freeNightUsed ? freeNightRedemptionValue : 0),
-        cardId
+        cardId,
+        userId
       );
   });
 }
 
-export function updateTrackedCard(input: UpdateTrackedCardInput): void {
+export function updateTrackedCard(userId: string, input: UpdateTrackedCardInput): void {
   runWrite(() => {
     getDatabase()
       .prepare(
@@ -93,7 +96,7 @@ export function updateTrackedCard(input: UpdateTrackedCardInput): void {
           certificate_expiry_date = ?,
           free_night_used = ?,
           free_night_redemption_value_cents = ?
-        WHERE id = ?`
+        WHERE id = ? AND user_id = ?`
       )
       .run(
         input.presetId,
@@ -102,19 +105,22 @@ export function updateTrackedCard(input: UpdateTrackedCardInput): void {
         input.certificateExpiryDate,
         input.freeNightUsed ? 1 : 0,
         toCents(input.freeNightUsed ? input.freeNightRedemptionValue : 0),
-        input.id
+        input.id,
+        userId
       );
   });
 }
 
-export function deleteTrackedCard(cardId: string): void {
+export function deleteTrackedCard(userId: string, cardId: string): void {
   runWrite(() => {
-    getDatabase().prepare('DELETE FROM tracked_cards WHERE id = ?').run(cardId);
+    getDatabase()
+      .prepare('DELETE FROM tracked_cards WHERE id = ? AND user_id = ?')
+      .run(cardId, userId);
   });
 }
 
-export function rollTrackedCard(cardId: string): boolean {
-  const card = getTrackedCardRow(cardId);
+export function rollTrackedCard(userId: string, cardId: string): boolean {
+  const card = getTrackedCardRow(userId, cardId);
 
   if (!card || !isRolloverEligible(card)) {
     return false;
@@ -128,12 +134,13 @@ export function rollTrackedCard(cardId: string): boolean {
           certificate_expiry_date = ?,
           free_night_used = 0,
           free_night_redemption_value_cents = 0
-        WHERE id = ?`
+        WHERE id = ? AND user_id = ?`
       )
       .run(
         getNextAnnualDate(card.annual_renewal_date),
         getNextAnnualDate(card.certificate_expiry_date),
-        cardId
+        cardId,
+        userId
       );
   });
 
@@ -144,10 +151,11 @@ export function isKnownCardPreset(presetId: string): boolean {
   return cardPresets.some((preset) => preset.id === presetId);
 }
 
-function readTrackedCardRows(): TrackedCardRow[] {
+function readTrackedCardRows(userId: string): TrackedCardRow[] {
   return getDatabase()
     .prepare(
       `SELECT id,
+        user_id,
         preset_id,
         nickname,
         annual_renewal_date,
@@ -156,15 +164,17 @@ function readTrackedCardRows(): TrackedCardRow[] {
         free_night_redemption_value_cents,
         created_at
       FROM tracked_cards
+      WHERE user_id = ?
       ORDER BY date(certificate_expiry_date) ASC, datetime(created_at) DESC`
     )
-    .all() as unknown as TrackedCardRow[];
+    .all(userId) as TrackedCardRow[];
 }
 
-function getTrackedCardRow(cardId: string): TrackedCardRow | undefined {
+function getTrackedCardRow(userId: string, cardId: string): TrackedCardRow | undefined {
   const row = getDatabase()
     .prepare(
       `SELECT id,
+        user_id,
         preset_id,
         nickname,
         annual_renewal_date,
@@ -173,28 +183,29 @@ function getTrackedCardRow(cardId: string): TrackedCardRow | undefined {
         free_night_redemption_value_cents,
         created_at
       FROM tracked_cards
-      WHERE id = ?`
+      WHERE id = ? AND user_id = ?`
     )
-    .get(cardId) as unknown as TrackedCardRow | undefined;
+    .get(cardId, userId) as TrackedCardRow | undefined;
 
   return row;
 }
 
-function getDatabase(): DatabaseSync {
+function getDatabase(): Database.Database {
   if (!database || !existsSync(databasePath)) {
     closeDatabase();
-    mkdirSync(dirname(databasePath), { recursive: true });
-    database = new DatabaseSync(databasePath);
+    ensureDatabaseDirectory();
+    database = new Database(databasePath);
     ensureSchema(database);
   }
 
   return database;
 }
 
-function ensureSchema(openDatabase: DatabaseSync): void {
+function ensureSchema(openDatabase: Database.Database): void {
   openDatabase.exec(`
       CREATE TABLE IF NOT EXISTS tracked_cards (
         id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
         preset_id TEXT NOT NULL,
         nickname TEXT NOT NULL,
         annual_renewal_date TEXT NOT NULL,
@@ -207,7 +218,12 @@ function ensureSchema(openDatabase: DatabaseSync): void {
 
   const columns = openDatabase
     .prepare('PRAGMA table_info(tracked_cards)')
-    .all() as unknown as TableColumnRow[];
+    .all() as TableColumnRow[];
+
+  if (!columns.some((column) => column.name === 'user_id')) {
+    openDatabase.exec('DELETE FROM tracked_cards');
+    openDatabase.exec('ALTER TABLE tracked_cards ADD COLUMN user_id TEXT NOT NULL DEFAULT ""');
+  }
 
   if (!columns.some((column) => column.name === 'free_night_redemption_value_cents')) {
     openDatabase.exec(
@@ -233,6 +249,7 @@ function closeDatabase(): void {
 function toTrackedCard(row: TrackedCardRow): TrackedCard {
   return {
     id: row.id,
+    userId: row.user_id,
     presetId: row.preset_id,
     nickname: row.nickname,
     annualRenewalDate: row.annual_renewal_date,

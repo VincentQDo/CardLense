@@ -45,6 +45,9 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "4.2.2",
+    "@types/better-sqlite3": "^7.6.13",
+    "better-auth": "^1.6.11",
+    "better-sqlite3": "^12.10.0",
     "daisyui": "5.5.19",
     "tailwindcss": "4.2.2"
   }

@@ -15,6 +15,7 @@ export interface CardPreset {
 
 export interface TrackedCard {
   id: string;
+  userId: string;
   presetId: CardPresetId;
   nickname: string;
   annualRenewalDate: string;

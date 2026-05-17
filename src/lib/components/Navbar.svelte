@@ -1,10 +1,25 @@
 <script lang="ts">
   import { resolve } from '$app/paths';
 
+  interface NavbarUser {
+    email: string;
+    id: string;
+    name: string;
+  }
+
+  interface Props {
+    user: NavbarUser | null;
+  }
+
+  const { user }: Props = $props();
+
   const menuItems = [
     { label: 'Home', url: '/' },
     { label: 'Cards', url: '/cards' }
   ] as const;
+  const visibleMenuItems = $derived(
+    user ? menuItems : menuItems.filter((menuItem) => menuItem.url !== '/cards')
+  );
 </script>
 
 <div class="max-lg:collapse bg-base-200 shadow-sm w-full rounded-md">
@@ -39,7 +54,7 @@
     <!-- Navbar center -->
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1">
-        {#each menuItems as menuItem (menuItem.url)}
+        {#each visibleMenuItems as menuItem (menuItem.url)}
           <li><a href={resolve(menuItem.url)}>{menuItem.label}</a></li>
         {/each}
       </ul>
@@ -48,6 +63,17 @@
 
     <!-- Navbar end -->
     <div class="navbar-end">
+      {#if user}
+        <div class="hidden max-w-56 truncate text-sm text-base-content/70 sm:block">
+          {user.email}
+        </div>
+        <form method="POST" action={resolve('/logout')} class="ml-3">
+          <button type="submit" class="btn btn-ghost btn-sm">Log out</button>
+        </form>
+      {:else}
+        <a href={resolve('/login?redirectTo=/cards')} class="btn btn-primary btn-sm mr-3">Sign in</a
+        >
+      {/if}
       <label class="toggle text-base-content">
         <input type="checkbox" value="winter" class="theme-controller" />
         <svg aria-label="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -82,9 +108,18 @@
   <!-- Small screen navbar -->
   <div class="collapse-content lg:hidden z-1">
     <ul class="menu">
-      {#each menuItems as menuItem (menuItem.url)}
+      {#each visibleMenuItems as menuItem (menuItem.url)}
         <li><a href={resolve(menuItem.url)}>{menuItem.label}</a></li>
       {/each}
+      {#if user}
+        <li>
+          <form method="POST" action={resolve('/logout')}>
+            <button type="submit">Log out</button>
+          </form>
+        </li>
+      {:else}
+        <li><a href={resolve('/login?redirectTo=/cards')}>Sign in</a></li>
+      {/if}
     </ul>
   </div>
   <!-- Small screen navbar -->

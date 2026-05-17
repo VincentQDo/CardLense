@@ -1,3 +1,7 @@
+<script lang="ts">
+  import { resolve } from '$app/paths';
+</script>
+
 <div class="hero flex justify-center p-6">
   <div class="hero-content flex-col lg:flex-row gap-12 py-16 px-10">
     <div class="flex flex-col gap-6 max-w-md">
@@ -19,8 +23,10 @@
       </div>
 
       <div class="flex flex-wrap gap-3 mt-2">
-        <button type="button" class="btn btn-primary btn-md">Get Started Free</button>
-        <button type="button" class="btn btn-ghost btn-md">See how it works →</button>
+        <a href={resolve('/login?redirectTo=/cards')} class="btn btn-primary btn-md"
+          >Get Started Free</a
+        >
+        <a href={resolve('/cards')} class="btn btn-ghost btn-md">See how it works →</a>
       </div>
 
       <div class="flex flex-wrap gap-2 mt-2">

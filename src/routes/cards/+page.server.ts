@@ -1,4 +1,4 @@
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 
 import { cardPresets } from '$lib/data/card-presets';
 import {
@@ -15,13 +15,18 @@ import type { Actions, PageServerLoad } from './$types';
 
 const dateInputPattern = /^\d{4}-\d{2}-\d{2}$/;
 
-export const load: PageServerLoad = () => ({
-  cardPresets,
-  trackedCards: listTrackedCards()
-});
+export const load: PageServerLoad = ({ locals }) => {
+  const userId = requireUserId(locals);
+
+  return {
+    cardPresets,
+    trackedCards: listTrackedCards(userId)
+  };
+};
 
 export const actions: Actions = {
-  addCard: async ({ request }) => {
+  addCard: async ({ locals, request }) => {
+    const userId = requireUserId(locals);
     const formData = await request.formData();
     const presetId = getStringField(formData, 'presetId');
     const nickname = getStringField(formData, 'nickname').trim();
@@ -46,7 +51,7 @@ export const actions: Actions = {
       return fail(400, { message: 'Use a valid redeemed value.' });
     }
 
-    addTrackedCard({
+    addTrackedCard(userId, {
       presetId,
       nickname,
       annualRenewalDate,
@@ -57,7 +62,8 @@ export const actions: Actions = {
 
     return { message: 'Card added.' };
   },
-  toggleFreeNight: async ({ request }) => {
+  toggleFreeNight: async ({ locals, request }) => {
+    const userId = requireUserId(locals);
     const formData = await request.formData();
     const cardId = getStringField(formData, 'cardId');
     const freeNightUsed = formData.get('freeNightUsed') === 'true';
@@ -71,11 +77,12 @@ export const actions: Actions = {
       return fail(400, { message: 'Use a valid redeemed value.' });
     }
 
-    updateFreeNightUsed(cardId, freeNightUsed, freeNightRedemptionValue);
+    updateFreeNightUsed(userId, cardId, freeNightUsed, freeNightRedemptionValue);
 
     return { message: 'Free night status updated.' };
   },
-  editCard: async ({ request }) => {
+  editCard: async ({ locals, request }) => {
+    const userId = requireUserId(locals);
     const formData = await request.formData();
     const cardId = getStringField(formData, 'cardId');
     const presetId = getStringField(formData, 'presetId');
@@ -105,7 +112,7 @@ export const actions: Actions = {
       return fail(400, { message: 'Use a valid redeemed value.' });
     }
 
-    updateTrackedCard({
+    updateTrackedCard(userId, {
       id: cardId,
       presetId,
       nickname,
@@ -117,7 +124,8 @@ export const actions: Actions = {
 
     return { message: 'Card updated.' };
   },
-  deleteCard: async ({ request }) => {
+  deleteCard: async ({ locals, request }) => {
+    const userId = requireUserId(locals);
     const formData = await request.formData();
     const cardId = getStringField(formData, 'cardId');
 
@@ -125,11 +133,12 @@ export const actions: Actions = {
       return fail(400, { message: 'Choose a card to delete.' });
     }
 
-    deleteTrackedCard(cardId);
+    deleteTrackedCard(userId, cardId);
 
     return { message: 'Card deleted.' };
   },
-  rollCard: async ({ request }) => {
+  rollCard: async ({ locals, request }) => {
+    const userId = requireUserId(locals);
     const formData = await request.formData();
     const cardId = getStringField(formData, 'cardId');
 
@@ -137,13 +146,21 @@ export const actions: Actions = {
       return fail(400, { message: 'Choose a card to roll.' });
     }
 
-    if (!rollTrackedCard(cardId)) {
+    if (!rollTrackedCard(userId, cardId)) {
       return fail(400, { message: 'This card is not ready to roll yet.' });
     }
 
     return { message: 'Card rolled to the next cycle.' };
   }
 };
+
+function requireUserId(locals: App.Locals): string {
+  if (!locals.user) {
+    redirect(303, '/login?redirectTo=/cards');
+  }
+
+  return locals.user.id;
+}
 
 function getStringField(formData: FormData, fieldName: string): string {
   const value = formData.get(fieldName);

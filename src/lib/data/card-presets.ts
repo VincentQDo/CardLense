@@ -26,6 +26,7 @@ export const cardPresets = [
 
 export const initialTrackedCards: TrackedCard[] = cardPresets.map((preset) => ({
   id: `sample-${preset.id}`,
+  userId: 'sample-user',
   presetId: preset.id,
   nickname: preset.id === 'hyatt' ? 'Personal Hyatt' : 'Personal IHG',
   annualRenewalDate: preset.id === 'hyatt' ? '2026-08-15' : '2026-10-01',

@@ -3,12 +3,14 @@
   import Navbar from '$lib/components/Navbar.svelte';
   import '../app.css';
 
-  const { children } = $props();
+  import type { LayoutProps } from './$types';
+
+  const { children, data }: LayoutProps = $props();
 </script>
 
 <svelte:head>
   <link rel="icon" href={favicon} />
 </svelte:head>
 
-<Navbar></Navbar>
+<Navbar user={data.user}></Navbar>
 {@render children()}
