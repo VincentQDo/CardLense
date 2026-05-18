@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="IHG Premier card illustration">
+  <defs>
+    <linearGradient id="ihg-bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#4c0519"/>
+      <stop offset="0.58" stop-color="#991b1b"/>
+      <stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+    <pattern id="ihg-grid" width="54" height="54" patternUnits="userSpaceOnUse">
+      <path d="M54 0 H0 V54" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <rect width="640" height="400" rx="34" fill="url(#ihg-bg)"/>
+  <rect width="640" height="400" rx="34" fill="url(#ihg-grid)"/>
+  <circle cx="515" cy="95" r="108" fill="#ffffff" opacity="0.1"/>
+  <circle cx="575" cy="138" r="62" fill="#ffffff" opacity="0.12"/>
+  <rect x="56" y="142" width="78" height="56" rx="10" fill="#f8d477"/>
+  <rect x="70" y="155" width="50" height="8" rx="4" fill="#7f1d1d" opacity="0.45"/>
+  <rect x="70" y="175" width="50" height="8" rx="4" fill="#7f1d1d" opacity="0.45"/>
+  <text x="56" y="86" fill="#fff7ed" font-family="Arial, Helvetica, sans-serif" font-size="35" font-weight="800" letter-spacing="4">IHG PREMIER</text>
+  <text x="56" y="286" fill="#fff7ed" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700">40K FREE NIGHT</text>
+  <text x="56" y="324" fill="#fff7ed" opacity="0.76" font-family="Arial, Helvetica, sans-serif" font-size="18">Award stays and hotel benefits</text>
+  <path d="M438 270 h120 a14 14 0 0 1 14 14 v34 a14 14 0 0 1-14 14 H438 a14 14 0 0 1-14-14 v-34 a14 14 0 0 1 14-14Z" fill="#fff7ed" opacity="0.16"/>
+  <path d="M452 304 h92" stroke="#fff7ed" stroke-opacity="0.62" stroke-width="8" stroke-linecap="round"/>
+</svg>

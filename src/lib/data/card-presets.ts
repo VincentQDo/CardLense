@@ -1,3 +1,8 @@
+import amexPlatinumCard from '$lib/assets/cards/amex-platinum.svg';
+import hyattCard from '$lib/assets/cards/hyatt.svg';
+import ihgCard from '$lib/assets/cards/ihg.svg';
+import ventureXCard from '$lib/assets/cards/venture-x.svg';
+
 import type { CardPreset, TrackedCard } from '$lib/types/cards';
 import { getNextAnnualDate } from '$lib/utils/card-dates';
 
@@ -5,7 +10,7 @@ export const cardPresets = [
   {
     id: 'hyatt',
     name: 'World of Hyatt Credit Card',
-    image: 'https://img.daisyui.com/images/stock/creditcard.webp',
+    image: hyattCard,
     annualFee: 95,
     benefits: [
       { label: 'Free Night', value: 'Cat 1-4 yearly' },
@@ -25,7 +30,7 @@ export const cardPresets = [
   {
     id: 'ihg',
     name: 'IHG Premier Card',
-    image: 'https://img.daisyui.com/images/stock/creditcard.webp',
+    image: ihgCard,
     annualFee: 99,
     benefits: [
       { label: 'Free Night', value: 'Up to 40k pts' },
@@ -45,7 +50,7 @@ export const cardPresets = [
   {
     id: 'venture-x',
     name: 'Capital One Venture X Rewards Credit Card',
-    image: 'https://img.daisyui.com/images/stock/creditcard.webp',
+    image: ventureXCard,
     annualFee: 395,
     benefits: [
       { label: 'Anniversary Bonus', value: '10,000 miles yearly' },
@@ -82,7 +87,7 @@ export const cardPresets = [
   {
     id: 'amex-platinum',
     name: 'American Express Platinum Card',
-    image: 'https://img.daisyui.com/images/stock/creditcard.webp',
+    image: amexPlatinumCard,
     annualFee: 895,
     benefits: [
       { label: 'Resy Credit', value: '$400 annually' },

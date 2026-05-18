@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Amex Platinum card illustration">
+  <defs>
+    <linearGradient id="platinum-bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#e5e7eb"/>
+      <stop offset="0.5" stop-color="#94a3b8"/>
+      <stop offset="1" stop-color="#334155"/>
+    </linearGradient>
+    <linearGradient id="platinum-panel" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.72"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.08"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="400" rx="34" fill="url(#platinum-bg)"/>
+  <rect x="30" y="30" width="580" height="340" rx="26" fill="none" stroke="#f8fafc" stroke-opacity="0.35" stroke-width="3"/>
+  <circle cx="496" cy="198" r="118" fill="url(#platinum-panel)"/>
+  <path d="M452 278 C462 226 448 192 414 162 C458 164 498 143 530 106 C524 158 540 196 578 226 C526 224 484 242 452 278 Z" fill="#f8fafc" opacity="0.45"/>
+  <rect x="56" y="142" width="78" height="56" rx="10" fill="#f8fafc" opacity="0.78"/>
+  <rect x="70" y="155" width="50" height="8" rx="4" fill="#475569" opacity="0.42"/>
+  <rect x="70" y="175" width="50" height="8" rx="4" fill="#475569" opacity="0.42"/>
+  <text x="56" y="86" fill="#0f172a" font-family="Arial, Helvetica, sans-serif" font-size="33" font-weight="800" letter-spacing="3">PLATINUM</text>
+  <text x="56" y="286" fill="#0f172a" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700">TRAVEL + LIFESTYLE CREDITS</text>
+  <text x="56" y="324" fill="#0f172a" opacity="0.7" font-family="Arial, Helvetica, sans-serif" font-size="18">Hotel, airline, dining, rides, and streaming</text>
+</svg>

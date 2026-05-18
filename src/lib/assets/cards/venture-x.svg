@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Venture X card illustration">
+  <defs>
+    <linearGradient id="venture-bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#111827"/>
+      <stop offset="0.52" stop-color="#1d4ed8"/>
+      <stop offset="1" stop-color="#38bdf8"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="400" rx="34" fill="url(#venture-bg)"/>
+  <path d="M444 74 L586 216 L490 312 L348 170 Z" fill="#ffffff" opacity="0.12"/>
+  <path d="M404 86 L558 240" stroke="#bfdbfe" stroke-width="14" stroke-linecap="round" opacity="0.58"/>
+  <path d="M418 228 L314 286 L344 210 L270 178 L350 158 L384 84 L404 162 L484 188 Z" fill="#e0f2fe" opacity="0.82"/>
+  <rect x="56" y="142" width="78" height="56" rx="10" fill="#c7d2fe"/>
+  <rect x="70" y="155" width="50" height="8" rx="4" fill="#1e3a8a" opacity="0.45"/>
+  <rect x="70" y="175" width="50" height="8" rx="4" fill="#1e3a8a" opacity="0.45"/>
+  <text x="56" y="86" fill="#f8fafc" font-family="Arial, Helvetica, sans-serif" font-size="35" font-weight="800" letter-spacing="3">VENTURE X</text>
+  <text x="56" y="286" fill="#f8fafc" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700">$300 TRAVEL CREDIT</text>
+  <text x="56" y="324" fill="#f8fafc" opacity="0.76" font-family="Arial, Helvetica, sans-serif" font-size="18">Miles, lounges, and travel protections</text>
+</svg>
