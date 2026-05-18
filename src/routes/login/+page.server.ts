@@ -2,6 +2,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import { APIError } from 'better-auth';
 
 import { auth } from '$lib/server/auth';
+import { getEmailDomain, logError, logInfo, logWarn } from '$lib/server/logger';
 
 import type { Actions, PageServerLoad } from './$types';
 
@@ -32,14 +33,28 @@ export const actions: Actions = {
     const redirectTo = getSafeRedirectPath(url.searchParams.get('redirectTo'));
 
     if (!email || !password) {
+      logWarn('auth_validation_failed', {
+        emailDomain: getEmailDomain(email),
+        mode,
+        reason: 'missing_credentials'
+      });
       return authFail(400, mode, email, 'Enter your email and password.');
     }
 
     if (!isEmailAddress(email)) {
+      logWarn('auth_validation_failed', {
+        mode,
+        reason: 'invalid_email'
+      });
       return authFail(400, mode, email, 'Enter a valid email address.');
     }
 
     if (mode === 'signup' && password.length < 8) {
+      logWarn('auth_validation_failed', {
+        emailDomain: getEmailDomain(email),
+        mode,
+        reason: 'short_password'
+      });
       return authFail(400, mode, email, 'Use at least 8 characters for your password.');
     }
 
@@ -50,8 +65,18 @@ export const actions: Actions = {
         await signIn(request, email, password, redirectTo);
       }
     } catch (error) {
+      logError('auth_action_failed', error, {
+        emailDomain: getEmailDomain(email),
+        mode
+      });
       return authFail(400, mode, email, getAuthErrorMessage(error, mode));
     }
+
+    logInfo('auth_action_succeeded', {
+      emailDomain: getEmailDomain(email),
+      mode,
+      redirectTo
+    });
 
     redirect(303, redirectTo);
   }
