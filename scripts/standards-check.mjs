@@ -23,7 +23,7 @@ const allowedAppCss = `@import 'tailwindcss';
 @plugin "daisyui" {
   themes:
     night --default,
-    winter;
+    corporate;
 }`;
 
 if (appCss !== allowedAppCss) {

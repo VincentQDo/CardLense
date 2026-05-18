@@ -16,7 +16,7 @@
           Know your benefits,<br />
           <span class="text-primary">use every perk.</span>
         </h1>
-        <p class="mt-4 text-base-content/60 text-lg font-light leading-relaxed">
+        <p class="mt-4 text-base-content/70 text-lg font-light leading-relaxed">
           CardLense tracks your credit card perks, deadlines, and hidden benefits — so you never
           leave value on the table again.
         </p>
@@ -38,15 +38,15 @@
 
       <div class="stats stats-horizontal shadow bg-base-100 rounded-2xl">
         <div class="stat py-4 px-5">
-          <div class="stat-title text-xs">Cards tracked</div>
+          <div class="stat-title text-xs text-base-content/70">Cards tracked</div>
           <div class="stat-value text-2xl text-primary">3.2k</div>
         </div>
         <div class="stat py-4 px-5">
-          <div class="stat-title text-xs">Avg. saved/yr</div>
+          <div class="stat-title text-xs text-base-content/70">Avg. saved/yr</div>
           <div class="stat-value text-2xl text-warning">$840</div>
         </div>
         <div class="stat py-4 px-5">
-          <div class="stat-title text-xs">Benefits found</div>
+          <div class="stat-title text-xs text-base-content/70">Benefits found</div>
           <div class="stat-value text-2xl text-success">98%</div>
         </div>
       </div>
@@ -59,7 +59,7 @@
         <div class="card-body p-5 gap-1">
           <div class="w-8 h-5 bg-warning rounded opacity-90"></div>
           <div class="mt-4">
-            <p class="text-[10px] uppercase tracking-widest opacity-60">Platinum Rewards</p>
+            <p class="text-[10px] uppercase tracking-widest opacity-80">Platinum Rewards</p>
             <p class="font-semibold text-sm mt-0.5">Sapphire Reserve</p>
           </div>
         </div>
@@ -71,7 +71,7 @@
         <div class="card-body p-5 gap-1">
           <div class="w-8 h-5 bg-base-100 rounded opacity-70"></div>
           <div class="mt-4">
-            <p class="text-[10px] uppercase tracking-widest opacity-60">Premium Travel</p>
+            <p class="text-[10px] uppercase tracking-widest opacity-80">Premium Travel</p>
             <p class="font-semibold text-sm mt-0.5">Amex Gold</p>
           </div>
         </div>
@@ -83,7 +83,7 @@
         <div class="card-body p-5 gap-1">
           <div class="w-8 h-5 bg-base-100 rounded opacity-70"></div>
           <div class="mt-4">
-            <p class="text-[10px] uppercase tracking-widest opacity-60">No Annual Fee</p>
+            <p class="text-[10px] uppercase tracking-widest opacity-80">No Annual Fee</p>
             <p class="font-semibold text-sm mt-0.5">Freedom Unlimited</p>
           </div>
         </div>

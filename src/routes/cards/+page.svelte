@@ -133,7 +133,7 @@
   <div class="flex flex-wrap items-center justify-between gap-4">
     <div>
       <h1 class="text-3xl font-bold">Cards</h1>
-      <p class="text-base-content/60">Track renewal dates and upcoming free-night certificates.</p>
+      <p class="text-base-content/70">Track renewal dates and upcoming free-night certificates.</p>
     </div>
 
     <button type="button" class="btn btn-primary" onclick={() => addCardDialog.showModal()}
@@ -152,36 +152,36 @@
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 class="text-lg font-semibold">Portfolio summary</h2>
-          <p class="text-sm text-base-content/60">Free-night status and annual value tracked.</p>
+          <p class="text-sm text-base-content/70">Free-night status and annual value tracked.</p>
         </div>
         <div class="badge badge-primary badge-outline">{data.trackedCards.length} hotel cards</div>
       </div>
 
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
         <div class="rounded-lg bg-base-200 p-3">
-          <div class="text-xs text-base-content/60">Available</div>
+          <div class="text-xs text-base-content/70">Available</div>
           <div class="text-2xl font-semibold text-success">{availableFreeNightCount}</div>
         </div>
         <div class="rounded-lg bg-base-200 p-3">
-          <div class="text-xs text-base-content/60">Used</div>
+          <div class="text-xs text-base-content/70">Used</div>
           <div class="text-2xl font-semibold text-info">
             {data.trackedCards.filter((card) => card.freeNightUsed).length}
           </div>
         </div>
         <div class="rounded-lg bg-base-200 p-3">
-          <div class="text-xs text-base-content/60">Expired</div>
+          <div class="text-xs text-base-content/70">Expired</div>
           <div class="text-2xl font-semibold text-warning">{expiredFreeNightCount}</div>
         </div>
         <div class="rounded-lg bg-base-200 p-3">
-          <div class="text-xs text-base-content/60">Fees</div>
+          <div class="text-xs text-base-content/70">Fees</div>
           <div class="text-lg font-semibold">{formatCurrency(totalAnnualFees)}</div>
         </div>
         <div class="rounded-lg bg-base-200 p-3">
-          <div class="text-xs text-base-content/60">Redeemed</div>
+          <div class="text-xs text-base-content/70">Redeemed</div>
           <div class="text-lg font-semibold text-success">{formatCurrency(totalRedeemedValue)}</div>
         </div>
         <div class="rounded-lg bg-base-200 p-3">
-          <div class="text-xs text-base-content/60">Net</div>
+          <div class="text-xs text-base-content/70">Net</div>
           <div class="text-lg font-semibold">{formatCurrency(netTrackedValue)}</div>
         </div>
       </div>
@@ -211,7 +211,7 @@
         <div class="hero-content text-center">
           <div class="max-w-md">
             <h2 class="text-2xl font-bold">No hotel cards yet</h2>
-            <p class="mt-2 text-base-content/60">
+            <p class="mt-2 text-base-content/70">
               Add your first card to track annual free-night refreshes and certificate deadlines.
             </p>
             <button
@@ -385,7 +385,7 @@
         />
         <span>
           <span class="block font-medium">Free night used</span>
-          <span class="text-sm text-base-content/60">Mark this certificate as already used.</span>
+          <span class="text-sm text-base-content/70">Mark this certificate as already used.</span>
         </span>
       </label>
 

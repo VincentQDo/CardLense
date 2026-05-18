@@ -117,7 +117,7 @@
     <div class="card-body gap-6">
       <div>
         <h1 class="text-2xl font-bold">{isSignup ? 'Create account' : 'Sign in'}</h1>
-        <p class="mt-1 text-sm text-base-content/60">
+        <p class="mt-1 text-sm text-base-content/70">
           {isSignup
             ? 'Start tracking your card benefits privately.'
             : 'Access your saved card portfolio.'}

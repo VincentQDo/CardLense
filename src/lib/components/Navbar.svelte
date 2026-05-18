@@ -75,7 +75,7 @@
         >
       {/if}
       <label class="toggle text-base-content">
-        <input type="checkbox" value="winter" class="theme-controller" />
+        <input type="checkbox" value="corporate" class="theme-controller" />
         <svg aria-label="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
           ><g
             stroke-linejoin="round"

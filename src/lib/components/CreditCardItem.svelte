@@ -236,27 +236,27 @@
             {freeNightUsed ? 'Free night used' : formatDaysUntilDate(certificateExpiryDate)}
           </div>
         </div>
-        <div class="text-sm text-base-content/60">{name}</div>
+        <div class="text-sm text-base-content/70">{name}</div>
       </div>
 
       <div class="stats stats-vertical bg-base-200 shadow-sm sm:stats-horizontal">
         <div class="stat">
-          <div class="stat-title">Annual fee</div>
+          <div class="stat-title text-base-content/70">Annual fee</div>
           <div class="stat-value text-lg">${annualFee}</div>
         </div>
 
         <div class="stat">
-          <div class="stat-title">Refresh date</div>
+          <div class="stat-title text-base-content/70">Refresh date</div>
           <div class="stat-value text-lg">{formatDateLabel(annualRenewalDate)}</div>
         </div>
 
         <div class="stat">
-          <div class="stat-title">Certificate expiry</div>
+          <div class="stat-title text-base-content/70">Certificate expiry</div>
           <div class="stat-value text-lg">{formatDateLabel(certificateExpiryDate)}</div>
         </div>
 
         <div class="stat">
-          <div class="stat-title">Redeemed value</div>
+          <div class="stat-title text-base-content/70">Redeemed value</div>
           <div class="stat-value text-lg">{formattedRedemptionValue}</div>
         </div>
       </div>
