@@ -5,9 +5,12 @@ import { logInfo, logWarn } from '$lib/server/logger';
 import {
   addTrackedCard,
   deleteTrackedCard,
+  initializeTrackedCardCreditValues,
   isKnownCardPreset,
   listTrackedCards,
+  rollActiveCreditPeriods,
   rollTrackedCard,
+  updateCreditValue,
   updateFreeNightUsed,
   updateTrackedCard
 } from '$lib/server/cards-db';
@@ -18,7 +21,23 @@ const dateInputPattern = /^\d{4}-\d{2}-\d{2}$/;
 
 export const load: PageServerLoad = ({ locals }) => {
   const userId = requireUserId(locals);
+  const initializedCreditCount = initializeTrackedCardCreditValues(userId);
+  const rolledCreditCount = rollActiveCreditPeriods(userId);
   const trackedCards = listTrackedCards(userId);
+
+  if (initializedCreditCount > 0) {
+    logInfo('card_credit_values_initialized', {
+      creditCount: initializedCreditCount,
+      userId
+    });
+  }
+
+  if (rolledCreditCount > 0) {
+    logInfo('card_credit_values_auto_rolled', {
+      creditCount: rolledCreditCount,
+      userId
+    });
+  }
 
   logInfo('cards_loaded', {
     cardCount: trackedCards.length,
@@ -105,6 +124,52 @@ export const actions: Actions = {
     });
 
     return { message: 'Free night status updated.' };
+  },
+  updateCreditValue: async ({ locals, request }) => {
+    const userId = requireUserId(locals);
+    const formData = await request.formData();
+    const cardId = getStringField(formData, 'cardId');
+    const creditId = getStringField(formData, 'creditId');
+    const periodStart = getStringField(formData, 'periodStart');
+    const userValue = getMoneyField(formData, 'userValue');
+    const used = formData.get('used') === 'true';
+
+    if (!cardId || !creditId || !periodStart) {
+      logCardValidationFailure('updateCreditValue', userId, 'missing_credit_identity', {
+        cardId,
+        creditId,
+        periodStart
+      });
+      return fail(400, { message: 'Choose a credit to update.' });
+    }
+
+    if (userValue === undefined) {
+      logCardValidationFailure('updateCreditValue', userId, 'invalid_credit_value', {
+        cardId,
+        creditId
+      });
+      return fail(400, { message: 'Use a finite non-negative credit value.' });
+    }
+
+    if (!updateCreditValue(userId, { cardId, creditId, periodStart, used, userValue })) {
+      logCardValidationFailure('updateCreditValue', userId, 'credit_not_found_for_card', {
+        cardId,
+        creditId,
+        periodStart
+      });
+      return fail(404, { message: 'That credit is not available for this card.' });
+    }
+
+    logInfo('card_credit_value_updated', {
+      cardId,
+      creditId,
+      periodStart,
+      used,
+      userId,
+      userValue
+    });
+
+    return { message: 'Credit value updated.' };
   },
   editCard: async ({ locals, request }) => {
     const userId = requireUserId(locals);

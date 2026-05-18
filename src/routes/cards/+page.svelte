@@ -2,7 +2,6 @@
   import { enhance } from '$app/forms';
   import CreditCardItem from '$lib/components/CreditCardItem.svelte';
   import { findCardPreset } from '$lib/data/card-presets';
-  import { getDaysUntilDate } from '$lib/utils/card-dates';
 
   import type { SubmitFunction } from '@sveltejs/kit';
   import type { TrackedCard } from '$lib/types/cards';
@@ -24,23 +23,13 @@
     presetId: '',
     nickname: '',
     annualRenewalDate: '',
-    certificateExpiryDate: '',
-    freeNightUsed: false,
-    freeNightRedemptionValue: 0
+    certificateExpiryDate: ''
   });
-  const trackedCardsWithPresets = $derived(
-    data.trackedCards.map((card) => ({
-      card,
-      preset: findCardPreset(card.presetId)
-    }))
-  );
-  const availableFreeNightCount = $derived(data.trackedCards.filter(isAvailableFreeNight).length);
-  const expiredFreeNightCount = $derived(data.trackedCards.filter(isExpiredFreeNight).length);
   const totalAnnualFees = $derived(
-    trackedCardsWithPresets.reduce((total, item) => total + item.preset.annualFee, 0)
+    data.trackedCards.reduce((total, card) => total + card.annualFee, 0)
   );
   const totalRedeemedValue = $derived(
-    data.trackedCards.reduce((total, card) => total + card.freeNightRedemptionValue, 0)
+    data.trackedCards.reduce((total, card) => total + card.annualizedCreditValue, 0)
   );
   const netTrackedValue = $derived(totalRedeemedValue - totalAnnualFees);
 
@@ -66,9 +55,7 @@
       presetId: getDefaultPresetId(),
       nickname: '',
       annualRenewalDate: '',
-      certificateExpiryDate: '',
-      freeNightUsed: false,
-      freeNightRedemptionValue: 0
+      certificateExpiryDate: ''
     };
   }
 
@@ -78,9 +65,7 @@
       presetId: card.presetId,
       nickname: card.nickname,
       annualRenewalDate: card.annualRenewalDate,
-      certificateExpiryDate: card.certificateExpiryDate,
-      freeNightUsed: card.freeNightUsed,
-      freeNightRedemptionValue: card.freeNightRedemptionValue
+      certificateExpiryDate: card.certificateExpiryDate
     };
     editCardDialog.showModal();
   }
@@ -109,16 +94,6 @@
     };
   };
 
-  function isAvailableFreeNight(card: TrackedCard): boolean {
-    return !card.freeNightUsed && !isExpiredFreeNight(card);
-  }
-
-  function isExpiredFreeNight(card: TrackedCard): boolean {
-    const daysUntilExpiry = getDaysUntilDate(card.certificateExpiryDate);
-
-    return !card.freeNightUsed && daysUntilExpiry !== undefined && daysUntilExpiry < 0;
-  }
-
   function formatCurrency(value: number): string {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -133,7 +108,7 @@
   <div class="flex flex-wrap items-center justify-between gap-4">
     <div>
       <h1 class="text-3xl font-bold">Cards</h1>
-      <p class="text-base-content/70">Track renewal dates and upcoming free-night certificates.</p>
+      <p class="text-base-content/70">Track renewal dates, credit values, and annual card math.</p>
     </div>
 
     <button type="button" class="btn btn-primary" onclick={() => addCardDialog.showModal()}
@@ -152,32 +127,18 @@
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 class="text-lg font-semibold">Portfolio summary</h2>
-          <p class="text-sm text-base-content/70">Free-night status and annual value tracked.</p>
+          <p class="text-sm text-base-content/70">Annualized credit value against card fees.</p>
         </div>
-        <div class="badge badge-primary badge-outline">{data.trackedCards.length} hotel cards</div>
+        <div class="badge badge-primary badge-outline">{data.trackedCards.length} cards</div>
       </div>
 
-      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+      <div class="grid gap-3 sm:grid-cols-3">
         <div class="rounded-lg bg-base-200 p-3">
-          <div class="text-xs text-base-content/70">Available</div>
-          <div class="text-2xl font-semibold text-success">{availableFreeNightCount}</div>
-        </div>
-        <div class="rounded-lg bg-base-200 p-3">
-          <div class="text-xs text-base-content/70">Used</div>
-          <div class="text-2xl font-semibold text-info">
-            {data.trackedCards.filter((card) => card.freeNightUsed).length}
-          </div>
-        </div>
-        <div class="rounded-lg bg-base-200 p-3">
-          <div class="text-xs text-base-content/70">Expired</div>
-          <div class="text-2xl font-semibold text-warning">{expiredFreeNightCount}</div>
-        </div>
-        <div class="rounded-lg bg-base-200 p-3">
-          <div class="text-xs text-base-content/70">Fees</div>
+          <div class="text-xs text-base-content/70">Annual fees</div>
           <div class="text-lg font-semibold">{formatCurrency(totalAnnualFees)}</div>
         </div>
         <div class="rounded-lg bg-base-200 p-3">
-          <div class="text-xs text-base-content/70">Redeemed</div>
+          <div class="text-xs text-base-content/70">Annualized value</div>
           <div class="text-lg font-semibold text-success">{formatCurrency(totalRedeemedValue)}</div>
         </div>
         <div class="rounded-lg bg-base-200 p-3">
@@ -203,6 +164,9 @@
           certificateExpiryDate={trackedCard.certificateExpiryDate}
           freeNightUsed={trackedCard.freeNightUsed}
           freeNightRedemptionValue={trackedCard.freeNightRedemptionValue}
+          creditValuations={trackedCard.creditValuations}
+          annualizedCreditValue={trackedCard.annualizedCreditValue}
+          netValue={trackedCard.netValue}
           onEdit={() => openEditCard(trackedCard)}
         />
       {/each}
@@ -210,9 +174,9 @@
       <div class="hero rounded-lg bg-base-200 py-16">
         <div class="hero-content text-center">
           <div class="max-w-md">
-            <h2 class="text-2xl font-bold">No hotel cards yet</h2>
+            <h2 class="text-2xl font-bold">No cards yet</h2>
             <p class="mt-2 text-base-content/70">
-              Add your first card to track annual free-night refreshes and certificate deadlines.
+              Add your first card to track benefit credits, annual fees, and net value.
             </p>
             <button
               type="button"
@@ -377,31 +341,13 @@
       </div>
 
       <label class="flex cursor-pointer items-center gap-3 rounded-lg border border-base-300 p-4">
-        <input
-          class="checkbox checkbox-primary"
-          type="checkbox"
-          name="freeNightUsed"
-          bind:checked={editCardForm.freeNightUsed}
-        />
+        <input type="hidden" name="freeNightRedemptionValue" value="0" />
         <span>
-          <span class="block font-medium">Free night used</span>
-          <span class="text-sm text-base-content/70">Mark this certificate as already used.</span>
+          <span class="block font-medium">Credit values</span>
+          <span class="text-sm text-base-content/70"
+            >Edit individual credit values directly on the card.</span
+          >
         </span>
-      </label>
-
-      <label class="form-control w-full">
-        <span class="label">
-          <span class="label-text">Redeemed value</span>
-        </span>
-        <input
-          class="input input-bordered w-full"
-          type="number"
-          name="freeNightRedemptionValue"
-          min="0"
-          step="0.01"
-          bind:value={editCardForm.freeNightRedemptionValue}
-          disabled={!editCardForm.freeNightUsed}
-        />
       </label>
 
       <div class="modal-action">

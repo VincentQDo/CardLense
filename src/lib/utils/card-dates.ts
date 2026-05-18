@@ -1,3 +1,5 @@
+import type { CreditCadence } from '$lib/types/cards';
+
 const dateInputPattern = /^(\d{4})-(\d{2})-(\d{2})$/;
 
 export function getNextAnnualDate(dateInput: string, today = new Date()): string {
@@ -68,10 +70,117 @@ export function formatDaysUntilDate(dateInput: string): string {
   return daysUntilDate === 1 ? 'Expires tomorrow' : `Expires in ${daysUntilDate} days`;
 }
 
+export interface CreditPeriod {
+  start: string;
+  end: string;
+  label: string;
+}
+
+export function getCreditPeriod(cadence: CreditCadence, today = new Date()): CreditPeriod {
+  const year = today.getFullYear();
+  const monthIndex = today.getMonth();
+
+  if (cadence === 'monthly') {
+    return makePeriod(new Date(year, monthIndex, 1), new Date(year, monthIndex + 1, 0), 'monthly');
+  }
+
+  if (cadence === 'quarterly') {
+    const quarterStartMonth = Math.floor(monthIndex / 3) * 3;
+    const quarter = quarterStartMonth / 3 + 1;
+
+    return makePeriod(
+      new Date(year, quarterStartMonth, 1),
+      new Date(year, quarterStartMonth + 3, 0),
+      `Q${quarter} ${year}`
+    );
+  }
+
+  if (cadence === 'semi_annual') {
+    const firstHalf = monthIndex < 6;
+    const halfStartMonth = firstHalf ? 0 : 6;
+    const halfLabel = firstHalf ? 'H1' : 'H2';
+
+    return makePeriod(
+      new Date(year, halfStartMonth, 1),
+      new Date(year, halfStartMonth + 6, 0),
+      `${halfLabel} ${year}`
+    );
+  }
+
+  if (cadence === 'four_year') {
+    const periodStartYear = year - (year % 4);
+
+    return makePeriod(
+      new Date(periodStartYear, 0, 1),
+      new Date(periodStartYear + 4, 0, 0),
+      `${periodStartYear}-${periodStartYear + 3}`
+    );
+  }
+
+  return makePeriod(new Date(year, 0, 1), new Date(year, 11, 31), `${year}`);
+}
+
+export function getCreditCadenceLabel(cadence: CreditCadence): string {
+  if (cadence === 'monthly') {
+    return 'Monthly';
+  }
+
+  if (cadence === 'quarterly') {
+    return 'Quarterly';
+  }
+
+  if (cadence === 'semi_annual') {
+    return 'Semiannual';
+  }
+
+  if (cadence === 'four_year') {
+    return 'Every 4 years';
+  }
+
+  return 'Annual';
+}
+
+export function getAnnualizedCreditValue(cadence: CreditCadence, value: number): number {
+  if (cadence === 'monthly') {
+    return value * 12;
+  }
+
+  if (cadence === 'quarterly') {
+    return value * 4;
+  }
+
+  if (cadence === 'semi_annual') {
+    return value * 2;
+  }
+
+  if (cadence === 'four_year') {
+    return value / 4;
+  }
+
+  return value;
+}
+
 function toDateInputValue(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
 
   return `${year}-${month}-${day}`;
+}
+
+function makePeriod(start: Date, end: Date, label: string): CreditPeriod {
+  const periodLabel = label === 'monthly' ? formatMonthYearLabel(start) : label;
+
+  return {
+    start: toDateInputValue(start),
+    end: toDateInputValue(end),
+    label: periodLabel
+  };
+}
+
+function formatMonthYearLabel(date: Date): string {
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    year: 'numeric'
+  }).format(date);
 }
